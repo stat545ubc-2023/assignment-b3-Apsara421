@@ -25,8 +25,11 @@ ui <- fluidPage(
     ),
     mainPanel(
       plotOutput("sizeCategoryPlot"),
+      uiOutput("thickTreesTableHeading"),
       tableOutput("thickTreesTable"),
+      uiOutput("mediumTreesTableHeading"),
       tableOutput("mediumTreesTable"),
+      uiOutput("thinTreesTableHeading"),
       tableOutput("thinTreesTable")
     )
   )
@@ -42,24 +45,38 @@ server <- function(input, output) {
   
   # Bar graph of tree size categories for selected genus
   output$sizeCategoryPlot <- renderPlot({
-    ggplot(filtered_data(), aes(x = SizeCategory)) +
-      geom_bar(fill = "blue", color = "black") +
+    ggplot(filtered_data(), aes(x = SizeCategory, fill=SizeCategory)) +
+      geom_bar( color = "black") +
       theme_minimal() +
       labs(title = paste("Size Categories of Trees:", input$genus),
-           x = "Size Category", y = "Count")
+           x = "Size Category", y = "Count")+
+      guides(fill = guide_legend(title = "Size Category"))
   })
   
   # Separate tables for each size category
+  table_heading <- function(size_category) {
+    paste(size_category, " :5 trees subset for", input$genus)
+  }
+  
+  # Separate tables for each size category with headings
+  output$thickTreesTableHeading <- renderUI({
+    h4(table_heading("Thick"))
+  })
   output$thickTreesTable <- renderTable({
     filtered_data() %>% filter(SizeCategory == "Thick") %>% 
       slice_head(n = 5) 
+  })
+  output$mediumTreesTableHeading <- renderUI({
+    h4(table_heading("Medium"))
   })
   
   output$mediumTreesTable <- renderTable({
     filtered_data() %>% filter(SizeCategory == "Medium") %>% 
       slice_head(n = 5)  
   })
-  
+  output$thinTreesTableHeading <- renderUI({
+    h4(table_heading("Thin"))
+  })
   output$thinTreesTable <- renderTable({
     filtered_data() %>% filter(SizeCategory == "Thin") %>% 
       slice_head(n = 5)  
