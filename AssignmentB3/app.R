@@ -21,16 +21,25 @@ ui <- fluidPage(
   titlePanel("Tree Diameter Categories by Genus"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("genus", "Choose a Genus:", choices = unique(trees_data$genus_name))
+            selectInput("genus", "Choose a Genus:", choices = unique(trees_data$genus_name))
     ),
-    mainPanel(
-      plotOutput("sizeCategoryPlot"),
-      uiOutput("thickTreesTableHeading"),
-      tableOutput("thickTreesTable"),
-      uiOutput("mediumTreesTableHeading"),
-      tableOutput("mediumTreesTable"),
-      uiOutput("thinTreesTableHeading"),
-      tableOutput("thinTreesTable")
+  mainPanel(
+      tabsetPanel(
+        tabPanel("Graph", 
+                 fluidRow(
+                   column(8, plotOutput("sizeCategoryPlot")),
+                   column(4, img(src = "tree.png", height = "300px", width = "auto"))
+                 )),
+        tabPanel("Thick Trees", 
+                 uiOutput("thickTreesTableHeading"),
+                 tableOutput("thickTreesTable")),
+        tabPanel("Medium Trees", 
+                 uiOutput("mediumTreesTableHeading"),
+                 tableOutput("mediumTreesTable")),
+        tabPanel("Thin Trees", 
+                 uiOutput("thinTreesTableHeading"),
+                 tableOutput("thinTreesTable"))
+      )
     )
   )
 )
