@@ -27,13 +27,17 @@ ui <- fluidPage(
         tabPanel("Graph", plotOutput("sizeCategoryPlot")),
         tabPanel("Thick Trees", 
                  uiOutput("thickTreesTableHeading"),
-                 DT::dataTableOutput("thickTreesTable")),
+                 DT::dataTableOutput("thickTreesTable"),
+                 downloadButton("downloadThick", "Download Thick Trees Table")),
+        
         tabPanel("Medium Trees", 
                  uiOutput("mediumTreesTableHeading"),
-                 DT::dataTableOutput("mediumTreesTable")),
+                 DT::dataTableOutput("mediumTreesTable"),
+                 downloadButton("downloadMedium", "Download Medium Trees Table")),
         tabPanel("Thin Trees", 
                  uiOutput("thinTreesTableHeading"),
-                 DT::dataTableOutput("thinTreesTable"))
+                 DT::dataTableOutput("thinTreesTable"),
+                 downloadButton("downloadThin", "Download Thin Trees Table"))
       )
     )
   )
@@ -93,6 +97,26 @@ server <- function(input, output) {
   output$thinTreesTable <- DT::renderDataTable({
     get_sorted_data(filtered_data(), "Thin")
   })
+
+# Download handlers
+output$downloadThick <- downloadHandler(
+  filename = function() { "thick_trees.csv" },
+  content = function(file) {
+    write.csv(get_sorted_data(filtered_data(), "Thick"), file, row.names = FALSE)
+  }
+)
+output$downloadMedium <- downloadHandler(
+  filename = function() { "medium_trees.csv" },
+  content = function(file) {
+    write.csv(get_sorted_data(filtered_data(), "Medium"), file, row.names = FALSE)
+  }
+)
+output$downloadThin <- downloadHandler(
+  filename = function() { "thin_trees.csv" },
+  content = function(file) {
+    write.csv(get_sorted_data(filtered_data(), "Thin"), file, row.names = FALSE)
+  }
+)
 }
 
 # Run the application
