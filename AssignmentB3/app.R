@@ -14,16 +14,19 @@ ui <- fluidPage(
   titlePanel("Tree Diameter Categories by Genus"),
   sidebarLayout(
     sidebarPanel(
+      #Feature 0: The code below is a slider that allows the user to define what tree diameter counts as thin, medium, or thick trees.
             selectInput("genus", "Choose a Genus:", choices = unique(trees_data$genus_name)),
             sliderInput("thinThreshold", "Thin-Medium Threshold (Diameter in inches):", min = 0, max = 15, value = 3),
             sliderInput("thickThreshold", "Medium-Thick Threshold (Diameter in inches):", min = 0, max = 15, value = 5),
             checkboxInput("sortOrder", "Sort Ascending by Tree Height Index:", value=TRUE),
+            #Feature 1: The code below allows the user to change the color of the bar plots. This maybe useful for individuals who are color blind or if people prefer certain color schemes
             colourInput("colorThin", "Color for Thin Trees", value = "#FF9999"),
             colourInput("colorMedium", "Color for Medium Trees", value = "#9999FF"),
             colourInput("colorThick", "Color for Thick Trees", value = "#99FF99")
     ),
   mainPanel(
       tabsetPanel(
+        #Feature 2: Turn static table into Interactive table: This allows the user to sort the data according to the variable that the user likes. 
         tabPanel("Graph", plotOutput("sizeCategoryPlot")),
         tabPanel("Thick Trees", 
                  uiOutput("thickTreesTableHeading"),
@@ -99,6 +102,7 @@ server <- function(input, output) {
   })
 
 # Download handlers
+  #Feature 3: The code below allows users to download the table generated as a csv. This can the be used for data collection purposes
 output$downloadThick <- downloadHandler(
   filename = function() { "thick_trees.csv" },
   content = function(file) {
