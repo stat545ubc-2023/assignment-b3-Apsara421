@@ -5,7 +5,8 @@ library(dplyr)
 library(datateachr)
 library(DT)
 library(colourpicker)
-
+#Please note that 3/6 features were noted for marking in assignment B3, and the code is the same since I had additional features in my original assignment 
+#which I have marked here for a total of 6 features.
 # Load your dataset
 trees_data <- vancouver_trees
 
@@ -14,19 +15,21 @@ ui <- fluidPage(
   titlePanel("Tree Diameter Categories by Genus"),
   sidebarLayout(
     sidebarPanel(
-      #Feature 0: The code below is a slider that allows the user to define what tree diameter counts as thin, medium, or thick trees.
+      #Feature 1: The code below is a slider that allows the user to define what tree diameter counts as thin, medium, or thick trees.
             selectInput("genus", "Choose a Genus:", choices = unique(trees_data$genus_name)),
             sliderInput("thinThreshold", "Thin-Medium Threshold (Diameter in inches):", min = 0, max = 15, value = 3),
             sliderInput("thickThreshold", "Medium-Thick Threshold (Diameter in inches):", min = 0, max = 15, value = 5),
+            #Feature 2: Below I have a line of code that helps sort the table by height. I put this in so that the user can choose to organize the trees in ascending order of tree height witin each thin,medium, thick tree diameter table.
             checkboxInput("sortOrder", "Sort Ascending by Tree Height Index:", value=TRUE),
-            #Feature 1: The code below allows the user to change the color of the bar plots. This maybe useful for individuals who are color blind or if people prefer certain color schemes
+            #Feature 3: The code below allows the user to change the color of the bar plots. This maybe useful for individuals who are color blind or if people prefer certain color schemes
             colourInput("colorThin", "Color for Thin Trees", value = "#FF9999"),
             colourInput("colorMedium", "Color for Medium Trees", value = "#9999FF"),
             colourInput("colorThick", "Color for Thick Trees", value = "#99FF99")
     ),
   mainPanel(
+    #Feature 4:The code below creates an interface with multiple tabs, where the plot is on one and the tables are on another
       tabsetPanel(
-        #Feature 2: Turn static table into Interactive table: This allows the user to sort the data according to the variable that the user likes. 
+        #Feature 5: Turn static table into Interactive table: This allows the user to sort the data according to the variable that the user likes. 
         tabPanel("Graph", plotOutput("sizeCategoryPlot")),
         tabPanel("Thick Trees", 
                  uiOutput("thickTreesTableHeading"),
@@ -102,7 +105,7 @@ server <- function(input, output) {
   })
 
 # Download handlers
-  #Feature 3: The code below allows users to download the table generated as a csv. This can the be used for data collection purposes
+  #Feature 6: The code below allows users to download the table generated as a csv. This can the be used for data collection purposes
 output$downloadThick <- downloadHandler(
   filename = function() { "thick_trees.csv" },
   content = function(file) {
